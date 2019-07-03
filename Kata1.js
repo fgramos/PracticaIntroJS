@@ -1,4 +1,4 @@
-//Cata 1: FooBarQuix
+//Primera Kata: FooBarQuix
 
 function FooBarQuix(paramNumber) {
 	let respuesta = "";
