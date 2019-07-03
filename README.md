@@ -1,2 +1,2 @@
 # PracticaIntroJS
-Practica de módulo Introducion JavaScrip Bootcamp Web 7
+Practica del módulo de Introducion JavaScrip Bootcamp Web 7
