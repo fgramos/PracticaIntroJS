@@ -204,147 +204,131 @@ Sólo se contemplan números entre el 1 y el 3999
 * Los símbolos V, L y D no pueden colocarse a la izquierda de otro mayor.
 */
 
+// function romanToArab(params) {
+// 	let results=0;
+// 	if (validateRoman(params)){
+// 		for (let i = 0; i < params.length; i++) {
+
+// 			if (params.charAt(i) === 'M'){
+// 				results+=1000;
+// 			}
+
+// 			if (params.charAt(i) === "D") {
+// 				results += 500;
+// 			}
+
+// 			if (params.charAt(i) === "C") {
+// 				if(params.charAt(i+1) === "M") {
+// 					results += 900;
+// 					i+=2;
+// 				} else if (params.charAt(i+1) === "D") {
+// 					results += 400;
+// 					i+=2;
+// 				} else  {
+// 					results += 100;
+// 				}
+// 			}
+
+// 			if (params.charAt(i) === "L") {
+// 				results += 50;
+// 			}
+
+// 			if (params.charAt(i) === "X") {
+// 				if (params.charAt(i + 1) === "C") {
+// 					results += 90;
+// 					i += 2;
+// 				} else if (params.charAt(i + 1) === "L") {
+// 					results += 40;
+// 					i += 2;
+// 				} else {
+// 					results += 10;
+// 				}
+// 			}
+
+// 			if (params.charAt(i) === "V") {
+// 				results += 5;
+// 			}
+
+// 			if (params.charAt(i) === "I") {
+// 				if (params.charAt(i + 1) === "X") {
+// 					results += 9;
+// 					i += 2;
+// 				} else if (params.charAt(i + 1) === "V") {
+// 					results += 4;
+// 					i += 2;
+// 				} else {
+// 					results += 1;
+// 				}
+// 			}
+// 		}
+// 	}
+// 	return results;
+// }
+
 function romanToArab(params) {
-	return "";
+	let results2 = 0;
+	if (validateRoman(params)) {
+		for (let i = 0; i < params.length; i++) {
+			switch (params.charAt(i)) {
+				case "M":
+					results2 += 1000;
+					break;
+				case "D":
+					results2 += 500;
+					break;
+				case "C":
+					if (params.charAt(i+1) === "M") {
+						results2 += 900;
+						i += 1;
+					} else if (params.charAt(i+1) === "D") {
+						results2 += 400;
+						i += 1;
+					} else {
+						results2 += 100;
+					}
+					break;
+				case "L":
+					results2 += 50;
+					break;
+				case "X":
+					if (params.charAt(i+1) === "C") {
+						results2 += 90;
+						i += 1;
+					} else if (params.charAt(i+1) === "L") {
+						results2 += 40;
+						i += 1;
+					} else {
+						results2 += 10;
+					}
+					break;
+				case "V":
+					results2 += 5;
+					break;
+				case "I":
+					if (params.charAt(i+1) === "X") {
+						results2 += 9;
+						i += 1;
+					} else if (params.charAt(i+1) === "V") {
+						results2 += 4;
+						i += 1;
+					} else {
+						results2 += 1;
+					}
+					break;
+				// default:
+				// 	break;
+			}
+		}
+	}
+	return results2;
 }
 
 //PRUEBAS
-validateRoman("XVIIII");	//ESTE NUMERO TENIA QUE FALLAR.
-validateRoman("LXXXX");		//ESTE NUMERO TENIA QUE FALLAR.
-validateRoman("MCCCC");		//ESTE NUMERO TENIA QUE FALLAR.
-validateRoman("MMMM");		//ESTE NUMERO TENIA QUE FALLAR.
 
 for (let i=1;i<4000;i++){
-	if (!validateRoman(arabToRoman(i))) {
-		console.log(i);
+	//console.log(i + " " + romanToArab(arabToRoman(i))+ " " +arabToRoman(i));
+	if (i != romanToArab(arabToRoman(i)) ){
+		console.log(i + " ERROR " + romanToArab(arabToRoman(i))+ " ERROR " +arabToRoman(i));
 	}
 }
 
-
-//validateRoman("MDCLXVIi");
-// validateRoman("VV");
-// validateRoman("LLL");
-// validateRoman("DDDD");
-// validateRoman("VLDVDLDVL");
-//validateRoman(arabToRoman(1666));
-//validateRoman("MDCLXVI");
-
-// validateRoman("VIXLXCMDCXI"); //ESTE NUMERO TENIA QUE FALLAR.
-// validateRoman("IIVIXXLXCMDC"); //ESTE NUMERO TENIA QUE FALLAR.
-// validateRoman("IIIVIIIXXXLXXXCXXXMDCXI"); //ESTE NUMERO TENIA QUE FALLAR.
-
-// validateRoman("IXCMDCLXVI");	//ESTE NUMERO TENIA QUE FALLAR.
-// validateRoman(arabToRoman(801));
-// validateRoman(arabToRoman(949));
-// validateRoman(arabToRoman(3939));
-// validateRoman(arabToRoman(3940));
-
-//console.log(arabToRoman(3999));
-//console.log(arabToRoman(4000));
-//console.log(validateRoman(arabToRoman(4000)));
-/*
-validateRoman("I");
-validateRoman("II");
-validateRoman("IV");
-validateRoman("IX");
-validateRoman("IL");
-validateRoman("IC");
-validateRoman("ID");
-validateRoman("IM");
-
-validateRoman("V");
-validateRoman("VI");
-validateRoman("VV");
-validateRoman("VX");
-validateRoman("VL");
-validateRoman("VC");
-validateRoman("VD");
-validateRoman("VM");
-
-validateRoman("X");
-validateRoman("XI");
-validateRoman("XV");
-validateRoman("XX");
-validateRoman("XL");
-validateRoman("XC");
-validateRoman("XD");
-validateRoman("XM");
-
-validateRoman("L");
-validateRoman("LI");
-validateRoman("LV");
-validateRoman("LX");
-validateRoman("LL");
-validateRoman("LC");
-validateRoman("LD");
-validateRoman("LM");
-
-validateRoman("C");
-validateRoman("CI");
-validateRoman("CV");
-validateRoman("CX");
-validateRoman("CL");
-validateRoman("CC");
-validateRoman("CD");
-validateRoman("CM");
-
-validateRoman("D");
-validateRoman("DI");
-validateRoman("DV");
-validateRoman("DX");
-validateRoman("DL");
-validateRoman("DC");
-validateRoman("DD");
-validateRoman("DM");
-
-validateRoman("M");
-validateRoman("MI");
-validateRoman("MV");
-validateRoman("MX");
-validateRoman("ML");
-validateRoman("MC");
-validateRoman("MD");
-validateRoman("MM");
-
-
-validateRoman("XIIVIIXVILXIDCLM"); 	//String: "I" no puede ir delante de "L".
-validateRoman("I");
-validateRoman("IV");
-validateRoman("IX");
-validateRoman("IC");
-validateRoman("ID");
-validateRoman("IM"); 				//String: "I" no puede ir delante de "M".
-
-validateRoman("XIIIIXVXDCLM"); 		//Existen 4 I
-validateRoman("XIIIXVXDCMLMMMM");	//acaba con 4 M
-validateRoman("XXXXIIIXVXDCMLMMM"); //empieza con 4 X
-validateRoman("XIVDCLMa"); 			//hay una a
-validateRoman("XIVDCLMV");			//hay dos V
-
-validateRoman("MMMMXIVDCLMVIIIII");	//
-
-validateRoman(arabToRoman(2019));
-validateRoman(arabToRoman(1492));
-validateRoman(arabToRoman(1898));
-validateRoman(arabToRoman(1912));
-validateRoman(arabToRoman(3999));
-*/
-
-//Pruebas
-/*
-
-console.log(arabToRoman(2019));
-console.log(arabToRoman(1492));
-console.log(arabToRoman(1898));
-console.log(arabToRoman(1912));
-console.log(arabToRoman(3999));
-console.log(arabToRoman(1));
-console.log(arabToRoman(4));
-console.log(arabToRoman(9));
-console.log(arabToRoman(10));
-console.log(arabToRoman(49));
-console.log(arabToRoman(99));
-console.log(arabToRoman(100));
-console.log(arabToRoman(500));
-console.log(arabToRoman(1000));
-*/
