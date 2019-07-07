@@ -63,33 +63,202 @@ Salida: Empate
 */
 
 const SUITS = {
-	codes: ["S", "H", "C", "D"],
+	code: ["S", "H", "C", "D"],
 	nameSpa: ["Picas", "Corazones", "Tréboles", "Diamantes"],
 	nameEng: ["Spades", "Hearts", "Clubs", "Diamonds"]
 };
 
-const SUIT_VALUES = {
+const CARD_VALUES = {
 	code: ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"],
 	nameSpa: [2, 3, 4, 5, 6, 7, 8, 9, 10, "Dama", "Reina", "Rey", "As"],
 	nameEng: [2, 3, 4, 5, 6, 7, 8, 9, "Ten", "Jack", "Queen", "King", "Ace"]
 };
 
 //Constructor de Carta
-function Carta(suit_value,suit) {
-	this.suit_value = suit_value;
+function Card(card_value, suit) {
+	this.card_value = card_value;
 	this.suit = suit;
+	this.indiceNumero = CARD_VALUES.code.indexOf(this.card_value);
+	this.indicePalo = SUITS.code.indexOf(this.suit);
+
+	this.getCardValue = function() {
+		return this.card_value;
+	};
+	this.getSuit = function() {
+		return this.suit;
+	};
+
+	this.idCard = function() {
+		return this.card_value + this.suit;
+	};
+	this.getNameSpa = function() {
+		return (
+			CARD_VALUES.nameSpa[this.indiceNumero] +
+			" de " +
+			SUITS.nameSpa[this.indicePalo]
+		);
+	};
+	this.getNameEng = function() {
+		return (
+			CARD_VALUES.nameEng[this.indiceNumero] +
+			" of " +
+			SUITS.nameEng[this.indicePalo]
+		);
+	};
 }
 
-for (let i = 0; i < SUITS.codes.length ; i++) {
-	console.log(i+" "+SUITS.codes[i] +" "+ SUITS.nameSpa[i]+" "+ SUITS.nameEng[i]);
+//constructor de Baraja
+function Baraja() {
+	this.baraja = new Array(CARD_VALUES.code.length);
+	this.repartido = new Array(CARD_VALUES.code.length);
+
+	for (let i = 0; i < CARD_VALUES.code.length; i++) {
+		this.baraja[i] = new Array(SUITS.code.length);
+		this.repartido[i] = new Array(SUITS.code.length);
+		for (let j = 0; j < SUITS.code.length; j++) {
+			this.baraja[i][j] = new Card(CARD_VALUES.code[i], SUITS.code[j]);
+			this.repartido[i][j] = false;
+		}
+	}
+
+	this.getCard = function(indiceValor, indicePalo) {
+		return this.baraja[indiceValor][indicePalo].idCard();
+	};
+	this.queCartaEs = function(indiceValor, indicePalo) {
+		return this.baraja[indiceValor][indicePalo].getNameSpa();
+	};
+
+	this.whatCardIs = function(indiceValor, indicePalo) {
+		return this.baraja[indiceValor][indicePalo].getNameEng();
+	};
+
+	this.estaRepartida = function(idValor, idPalo) {
+		return this.repartido[idValor][idPalo];
+	};
+
+	this.sinRepartir = function() {
+		let restan = 0;
+		for (let i = 0; i < CARD_VALUES.code.length; i++) {
+			for (let j = 0; j < SUITS.code.length; j++) {
+				if (!this.estaRepartida(i, j)) {
+					restan++;
+				}
+			}
+		}
+		return restan;
+	};
+
+	this.repartirCarta = function() {
+		if (this.sinRepartir() > 0) {
+			let valAleatorio = Math.floor(13 * Math.random());
+			let palAleatorio = Math.floor(4 * Math.random());
+			while (this.estaRepartida(valAleatorio, palAleatorio)) {
+				valAleatorio = Math.floor(13 * Math.random());
+				palAleatorio = Math.floor(4 * Math.random());
+			}
+			if (!this.estaRepartida(valAleatorio, palAleatorio)) {
+				this.repartido[valAleatorio][palAleatorio] = true;
+				return this.getCard(valAleatorio, palAleatorio);
+			}
+		}
+	};
+
+	this.repartirMano = function() {
+		let mano = [];
+		if (this.sinRepartir() >= 5) {
+			for (let i = 0; i < 5; i++) {
+				mano[i] = this.repartirCarta();
+			}
+		}
+		return mano;
+	};
 }
 
-for ( let i = 0; i < SUIT_VALUES.code.length ; i++ ){
-	console.log( i + " " + SUIT_VALUES.code[i]+ " "+SUIT_VALUES.nameSpa[i]+ " "+ SUIT_VALUES.nameEng[i]);
+//constructor de Poker - juego y reglas
+function Poker(){
+	this.ordenarMano = function (mano) {
+		let aux = Card();
+		//console.log(mano)
+		//console.log(mano[0][0] + " " + mano[1][0]+" "+mano[2][0]);
+		for (let i=0;i<4;i++){
+			for (let j=i+1;j<5;j++) {
+				//console.log("i:" + i + " j:" + j);
+				//console.log("i:"+i+ " j:" + j+ " > " +mano[i]+" "+mano[j]);
+				if ( CARD_VALUES.code.indexOf(mano[i][0]) > CARD_VALUES.code.indexOf(mano[j][0]) ) {
+					aux = mano[i];
+					mano[i] = mano[j];
+					mano[j] = aux;
+					//console.log("Cambio " + mano[i]+" "+mano[j]+ " >> " + mano);
+				}
+			}
+		}
+		return;
+	}
+
+	this.queJugada = function (mano) {
+		
+	}
 }
 
 
-//PRUEBAS
+let juego = new Poker();
+let fistro = new Baraja();
+//let unaMano = [];
+
+let unaMano = fistro.repartirMano();
+console.log(unaMano);
+juego.ordenarMano(unaMano);
+console.log(unaMano);
+
+
 /*
+console.log(fistro.getCard(0, 0));
+console.log(fistro.queCartaEs(0, 0));
+console.log(fistro.whatCardIs(0, 0));
+console.log(fistro.getCard(12, 3));
+console.log(fistro.queCartaEs(12, 3));
+console.log(fistro.whatCardIs(12, 3));
 
+console.log(fistro.sinRepartir());
+console.log(fistro.repartirCarta());
+console.log(fistro.sinRepartir());
 */
+
+// for (let index = 0; index < 9; index++) {
+// 	console.log(fistro.repartirMano());
+// 	console.log(fistro.sinRepartir());
+// }
+
+// for (let i=0 ; i < CARD_VALUES.code.length ; i++){
+// 	for (let j=0 ; j < SUITS.code.length ; j++ ) {
+// 		console.log(fistro.repartirCarta());
+
+// 		//console.log(fistro.getCard(i,j) +" "+ fistro.queCartaEs(i,j) +" "+fistro.repartirCarta());
+// 	//	console.log(fistro.);
+
+// 	};
+// };
+
+// for (let i = 0; i < SUITS.codes.length ; i++) {
+// 	console.log(i+" "+SUITS.codes[i] +" "+ SUITS.nameSpa[i]+" "+ SUITS.nameEng[i]);
+// };
+
+// for ( let i = 0; i < CARD_VALUES.code.length ; i++ ){
+// 	console.log( i + " " + CARD_VALUES.code[i]+ " "+CARD_VALUES.nameSpa[i]+ " "+ CARD_VALUES.nameEng[i]);
+// };
+
+// let prueba1 = new Card("A","S");
+// let prueba2 = new Card("Q", "H");
+// let prueba3 = new Card("J", "C");
+// console.log(prueba1.idCard());
+// console.log(prueba2.idCard());
+// console.log(prueba3.idCard());
+// console.log(prueba1.getCardValue()+" "+ prueba1.getSuit());
+// console.log(prueba2.getCardValue()+" "+ prueba2.getSuit());
+// console.log(prueba3.getCardValue()+" "+ prueba3.getSuit());
+// console.log(prueba1.getNameSpa());
+// console.log(prueba2.getNameSpa());
+// console.log(prueba3.getNameSpa());
+// console.log(prueba1.getNameEng());
+// console.log(prueba2.getNameEng());
+// console.log(prueba3.getNameEng());
