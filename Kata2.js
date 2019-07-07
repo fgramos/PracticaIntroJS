@@ -1,7 +1,19 @@
 //Segunda Kata: Sistema Romano
-/*
-* todo Crear una función para pasar de número romanos a árabes
+
+/*### Reglas
+
+Sólo se contemplan números entre el 1 y el 3999
+
+* Los símbolos I, X, C y M se pueden repetir hasta tres veces.
+* Los símbolos V, L y D no pueden repetirse.  
+* Los símbolos I, X y C se suman si están a la derecha de otro mayor o igual.
+* Los símbolos I, X y C se restan si están a la izquierda de otro mayor y solamente pueden anteponerse a los dos símbolos que le siguen en la sucesión.
+* I se resta de V y X
+* X se resta de L y C
+* C se resta de D y M
+* Los símbolos V, L y D no pueden colocarse a la izquierda de otro mayor.
 */
+
 
 function arabToRoman(params) {
 	if (params > 3999 || params < 1 ) {
@@ -190,81 +202,6 @@ function validateRoman(params) {
 	return itsOk;
 }
 
-/*### Reglas
-
-Sólo se contemplan números entre el 1 y el 3999
-
-* Los símbolos I, X, C y M se pueden repetir hasta tres veces.
-* Los símbolos V, L y D no pueden repetirse.  
-* Los símbolos I, X y C se suman si están a la derecha de otro mayor o igual.
-* Los símbolos I, X y C se restan si están a la izquierda de otro mayor y solamente pueden anteponerse a los dos símbolos que le siguen en la sucesión.
-* I se resta de V y X
-* X se resta de L y C
-* C se resta de D y M
-* Los símbolos V, L y D no pueden colocarse a la izquierda de otro mayor.
-*/
-
-// function romanToArab(params) {
-// 	let results=0;
-// 	if (validateRoman(params)){
-// 		for (let i = 0; i < params.length; i++) {
-
-// 			if (params.charAt(i) === 'M'){
-// 				results+=1000;
-// 			}
-
-// 			if (params.charAt(i) === "D") {
-// 				results += 500;
-// 			}
-
-// 			if (params.charAt(i) === "C") {
-// 				if(params.charAt(i+1) === "M") {
-// 					results += 900;
-// 					i+=2;
-// 				} else if (params.charAt(i+1) === "D") {
-// 					results += 400;
-// 					i+=2;
-// 				} else  {
-// 					results += 100;
-// 				}
-// 			}
-
-// 			if (params.charAt(i) === "L") {
-// 				results += 50;
-// 			}
-
-// 			if (params.charAt(i) === "X") {
-// 				if (params.charAt(i + 1) === "C") {
-// 					results += 90;
-// 					i += 2;
-// 				} else if (params.charAt(i + 1) === "L") {
-// 					results += 40;
-// 					i += 2;
-// 				} else {
-// 					results += 10;
-// 				}
-// 			}
-
-// 			if (params.charAt(i) === "V") {
-// 				results += 5;
-// 			}
-
-// 			if (params.charAt(i) === "I") {
-// 				if (params.charAt(i + 1) === "X") {
-// 					results += 9;
-// 					i += 2;
-// 				} else if (params.charAt(i + 1) === "V") {
-// 					results += 4;
-// 					i += 2;
-// 				} else {
-// 					results += 1;
-// 				}
-// 			}
-// 		}
-// 	}
-// 	return results;
-// }
-
 function romanToArab(params) {
 	let results2 = 0;
 	if (validateRoman(params)) {
@@ -324,6 +261,7 @@ function romanToArab(params) {
 }
 
 //PRUEBAS
+/*
 
 for (let i=1;i<4000;i++){
 	//console.log(i + " " + romanToArab(arabToRoman(i))+ " " +arabToRoman(i));
@@ -332,3 +270,4 @@ for (let i=1;i<4000;i++){
 	}
 }
 
+*/
