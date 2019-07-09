@@ -176,6 +176,7 @@ function Baraja() {
 
 //constructor de Poker - juego y reglas
 function Poker(){
+	//recibe un array de 5 cartas (una mano) y las ordena de menor a mayor.
 	this.ordenarMano = function (mano) {
 		let aux = Card();
 		//console.log(mano)
@@ -192,12 +193,50 @@ function Poker(){
 				}
 			}
 		}
-		return;
+		return mano;
+	}
+	
+	//true si es Color (todas del mismo palo)
+	this.isColor = function (mano) {
+		let unColor=true;
+		let i=0;
+		while (unColor && i < 4) {
+			unColor = mano[i][1] === mano[i+1][1]; //veo si son del mismo palo
+			i++;
+		}
+		return(unColor);	
 	}
 
+	//True si es escalera (todas con numeración consecutiva, incluido As-1-2-3-4 y T-J-Q-K-As)
+	this.isStraight = function(mano) {
+		mano = this.ordenarMano(mano);
+		let inSequence = true;
+		let i = 0;
+		//console.log(mano);
+		while (inSequence && i < 4) { //comparo cada numero con el siguiente para ver si es escalera
+			//console.log("i:" + i + " " + CARD_VALUES.code.indexOf(mano[i][0])+ " " +CARD_VALUES.code.indexOf(mano[i+1][0]) );
+			//en el caso de que la mano sea As-2-3-4-5 -> Five High
+			if (i===3 && inSequence && mano[4][0]==="A" ) {
+				inSequence = true; 
+			} else {
+				inSequence = CARD_VALUES.code.indexOf(mano[i][0]) + 1 === CARD_VALUES.code.indexOf(mano[i+1][0]); 
+			}
+			//inSequence = mano[i][1] === mano[i + 1][1]; //veo si son del mismo palo
+			i++;
+		}
+		return inSequence;
+	};;
+
+
+
 	this.queJugada = function (mano) {
-		
+		let colectionCard = { "2": 0, "3": 0, "4":0, "5":0, "6":0, "7":0, "8":0, "9":0, "T":0, "J":0, "Q":0, "K":0, "A":0};
+		mano=this.ordenarMano(mano);
+		for (let i=0;i<5;i++){
+			console.log(mano[i][0] + mano[i][1]);
+		}
 	}
+
 }
 
 
@@ -207,9 +246,24 @@ let fistro = new Baraja();
 
 let unaMano = fistro.repartirMano();
 console.log(unaMano);
-juego.ordenarMano(unaMano);
-console.log(unaMano);
+//juego.ordenarMano(unaMano);
+console.log(juego.ordenarMano(unaMano));
+//console.log(unaMano);
+console.log(juego.ordenarMano( ["2D","5D","4D","6D","3D"] ));
+//juego.queJugada( ["2D", "5D", "4D", "6D", "3D"] );
 
+console.log(juego.isColor(["2D", "5D", "4D", "6D", "3D"]));
+// console.log(juego.isColor(["2C", "5D", "4D", "6D", "3D"]));
+// console.log(juego.isColor(["2D", "5D", "4D", "6D", "3C"]));
+// console.log(juego.isColor(["2D", "5D", "4D", "6A", "3C"]));
+
+console.log(juego.isStraight(["7D", "5D", "9D", "6D", "8D"]));
+console.log(juego.isStraight(["AD", "TD", "KD", "QD", "JD"]));
+console.log(juego.isStraight(["AD", "5D", "4D", "3D", "2D"]));
+
+console.log(juego.isStraight(fistro.repartirMano()));
+console.log(juego.isStraight(fistro.repartirMano()));
+console.log(juego.isStraight(fistro.repartirMano()));
 
 /*
 console.log(fistro.getCard(0, 0));
