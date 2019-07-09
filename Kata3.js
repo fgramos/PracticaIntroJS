@@ -225,16 +225,70 @@ function Poker(){
 			i++;
 		}
 		return inSequence;
-	};;
-
-
-
-	this.queJugada = function (mano) {
-		let colectionCard = { "2": 0, "3": 0, "4":0, "5":0, "6":0, "7":0, "8":0, "9":0, "T":0, "J":0, "Q":0, "K":0, "A":0};
+	};
+	//Devuelve una cadena con el numero de repeticiones de cada numero. suma 5 siempre
+	this.strPoints = function (mano) {
 		mano=this.ordenarMano(mano);
-		for (let i=0;i<5;i++){
-			console.log(mano[i][0] + mano[i][1]);
+		//let stringRep = mano[0][0] + mano[1][0] + mano[2][0]+ mano[3][0] + mano[4][0];
+		let contaNum=1;
+		let stringPoints = "";
+		for (let i=0;i<4;i++){
+			if (mano[i][0] == mano[i+1][0]) { 
+				contaNum++;
+			} else {
+				stringPoints += contaNum;
+				contaNum=1;
+			}
 		}
+		stringPoints += contaNum;
+		return stringPoints;
+		// console.log(mano);
+		// console.log(stringRep);
+		// console.log(stringPoints);
+	}
+
+	//Ofrece un valor para medir el valor de la mano.
+	this.ponderate = function (mano) {
+		let stringPoints = this.strPoints(mano);
+		let valorPonderado;
+		switch (stringPoints) {
+			case "14":
+			case "41":
+				valorPonderado = 7;
+				break;
+			case "23":
+			case "32":
+				valorPonderado = 6;
+				break;
+			case "113":
+			case "311":
+			case "131":
+				valorPonderado = 3;
+				break;
+			case "122":
+			case "212":
+			case "221":
+				valorPonderado = 2;
+				break;
+			case "1112": 
+			case "1121": 
+			case "1211": 
+			case "2111":
+				valorPonderado = 1;
+				break;
+			case "11111":
+				if (this.isColor(mano) && this.isStraight(mano)) {
+					valorPonderado = 8;
+				} else if (this.isColor(mano)) {
+					valorPonderado = 5;
+				} else if (this.isStraight(mano)) {
+					valorPonderado = 4;
+				} else {
+					valorPonderado = 0;
+				}
+				break;
+		}
+		return valorPonderado;
 	}
 
 }
@@ -242,28 +296,66 @@ function Poker(){
 
 let juego = new Poker();
 let fistro = new Baraja();
-//let unaMano = [];
-
 let unaMano = fistro.repartirMano();
-console.log(unaMano);
-//juego.ordenarMano(unaMano);
-console.log(juego.ordenarMano(unaMano));
-//console.log(unaMano);
-console.log(juego.ordenarMano( ["2D","5D","4D","6D","3D"] ));
-//juego.queJugada( ["2D", "5D", "4D", "6D", "3D"] );
 
-console.log(juego.isColor(["2D", "5D", "4D", "6D", "3D"]));
+// console.log(unaMano);
+// console.log(juego.ordenarMano(unaMano));
+// console.log(juego.ordenarMano( ["2D","5D","4D","6D","3D"] ));
+
+// console.log(juego.isColor(["2D", "5D", "4D", "6D", "3D"]));
 // console.log(juego.isColor(["2C", "5D", "4D", "6D", "3D"]));
 // console.log(juego.isColor(["2D", "5D", "4D", "6D", "3C"]));
 // console.log(juego.isColor(["2D", "5D", "4D", "6A", "3C"]));
 
-console.log(juego.isStraight(["7D", "5D", "9D", "6D", "8D"]));
-console.log(juego.isStraight(["AD", "TD", "KD", "QD", "JD"]));
-console.log(juego.isStraight(["AD", "5D", "4D", "3D", "2D"]));
+// console.log(juego.isStraight(["7D", "5D", "9D", "6D", "8D"]));
+// console.log(juego.isStraight(["AD", "TD", "KD", "QD", "JD"]));
+// console.log(juego.isStraight(["AD", "5D", "4D", "3D", "2D"]));
 
-console.log(juego.isStraight(fistro.repartirMano()));
-console.log(juego.isStraight(fistro.repartirMano()));
-console.log(juego.isStraight(fistro.repartirMano()));
+// console.log(juego.isStraight(fistro.repartirMano()));
+// console.log(juego.isStraight(fistro.repartirMano()));
+// console.log(juego.isStraight(fistro.repartirMano()));
+
+
+
+// console.log(juego.strPoints(fistro.repartirMano()));
+// console.log(juego.strPoints(fistro.repartirMano()));
+// console.log(juego.strPoints(fistro.repartirMano()));
+// console.log(juego.strPoints(fistro.repartirMano()));
+
+
+
+
+
+//0 * High Card (Carta Más Alta): Para manos que no entran en ninguna de las manos superior, el ganador es aquel que tiene la carta más alta. Si se produce un empate entonces se compara la siguiente carta más alta y así sucesivamente. 
+console.log(juego.strPoints(["2D", "AC", "3S", "9H", "KD"])); // 11111
+console.log(juego.ponderate(["2D", "AC", "3S", "9H", "KD"])); // 11111
+//1 * Pair (Parejas): 2 de las 5 cartas de la mano tienen el mismo valor. Si las dos manos tienen pareja, entonces gana la que tenga la pareja más alta. Si ambas parejas son iguales entonces gana el que tenga la carta más alta. 
+console.log(juego.strPoints(["2D", "AC", "3S", "KH", "KD"])); // 11112 - 11121 - 11211 - 12111 - 21111
+console.log(juego.ponderate(["2D", "AC", "3S", "KH", "KD"])); // 1112 - 1121 - 1211 - 2111 
+//2 * Two Pairs (Dobles Parejas): La mano contiene 2 parejas diferentes. Si las dos manos tienen dobles parejas diferentes entonces gana aquella que tenga la pareja más alta. Si las dos manos tienen las mismas parejas entonces se compara la otra pareja. Si ambas manos tiene las mismas parejas entonces gana el que tenga la carta más alta restante. 
+console.log(juego.strPoints(["2D", "AC", "AS", "KH", "KD"])); // 122 - 212 - 221 
+console.log(juego.ponderate(["2D", "AC", "AS", "KH", "KD"])); // 122 - 212 - 221 
+//3 * Three of a Kind (Trio): 3 cartas de la mano tienen el mismo valor. Gana la mano que tiene las 3 cartas con mayor valor. 
+console.log(juego.strPoints(["2D", "AC", "AS", "AH", "KD"])); // 113 - 311 - 131 
+console.log(juego.ponderate(["2D", "AC", "AS", "AH", "KD"])); // 113 - 311 - 131 
+//4 * Straight (Escalera): La mano contiene 5 cartas consecutivas. Si las dos manos tienen escalera entonces gana la que tiene la carta más alta. 
+console.log(juego.strPoints(["AC", "TD", "KS", "QH", "JC"])); // 11111
+console.log(juego.ponderate(["AC", "TD", "KS", "QH", "JC"])); // 11111
+//5 * Flush (Color): La mano tiene 5 cartas con la misma cara. Si ambas manos tienen color entonces gana el que tenga la carta más alta. 
+console.log(juego.strPoints(["AD", "2D", "4D", "6D", "JD"])); // 11111
+console.log(juego.ponderate(["AD", "2D", "4D", "6D", "JD"])); // 11111
+//6 * Full House (Full): La mano tiene un trío y una pareja. En caso de tener ambas manos full entonces gana el que tenga el trío más alto. 
+console.log(juego.strPoints(["AD", "AC", "AS", "KH", "KD"])); // 23 - 32
+console.log(juego.ponderate(["AD", "AC", "AS", "KH", "KD"])); // 23 - 32
+//7 * Four of a Kind (Poker): 4 cartas con el mismo valor. En caso de tener ambas manos poker gana el que tenga el valor más alto.
+console.log(juego.strPoints(["AD", "AC", "AS", "AH", "KD"])); // 14 - 41
+console.log(juego.ponderate(["AD", "AC", "AS", "AH", "KD"])); // 14 - 41
+//8 * Straight flush (Escalera de Color): 5 cartas de la misma cara pero con valores consecutivos. En caso de tener escalera las dos manos entonces gana el que tenga el valor más alto.
+console.log(juego.strPoints(["AD", "5D", "4D", "3D", "2D"])); // 11111
+console.log(juego.ponderate(["AD", "5D", "4D", "3D", "2D"])); // 11111
+
+console.log(juego.strPoints(["AD", "TD", "KD", "QD", "JD"])); // 11111
+console.log(juego.ponderate(["AD", "TD", "KD", "QD", "JD"])); // 11111
 
 /*
 console.log(fistro.getCard(0, 0));
