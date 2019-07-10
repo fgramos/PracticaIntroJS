@@ -204,10 +204,7 @@ function PokerGame(){
 			for (let j = i + 1; j < 5; j++) {
 				//console.log("i:" + i + " j:" + j);
 				//console.log("i:"+i+ " j:" + j+ " > " +mano[i]+" "+mano[j]);
-				if (
-					CARD_VALUES.code.indexOf(mano[i][0]) >
-					CARD_VALUES.code.indexOf(mano[j][0])
-				) {
+				if (CARD_VALUES.code.indexOf(mano[i][0]) > 	CARD_VALUES.code.indexOf(mano[j][0])) {
 					aux = mano[i];
 					mano[i] = mano[j];
 					mano[j] = aux;
@@ -340,14 +337,18 @@ function Partida(numJugadores){
 
 	this.comparaEmpate = function(mano1, mano2, jugada) {
 		let ganador = 0;
+		let posiRepe1, posiRepe2;
 		switch (jugada) {
 			case 0: //carta mas alta
+			case 4: //Straight (Escalera)
+			case 5: //Flush (Color)
+			case 8: //Straight flush (Escalera de Color)
 				ganador = this.desempate(mano1, mano2);
 				break;
 			case 1: //pareja
 				//console.log(juego.strPoints(mano1)+"-"+juego.strPoints(mano1).indexOf("2")+"/"+juego.strPoints(mano2) +"-" +juego.strPoints(mano2).indexOf("2"));
-				let posiRepe1 = juego.strPoints(mano1).indexOf("2"); // en cadena (1121) devuelve posicion repetida (2)
-				let posiRepe2 = juego.strPoints(mano2).indexOf("2");
+				posiRepe1 = juego.strPoints(mano1).indexOf("2"); // en cadena (1121) devuelve posicion repetida (2)
+				posiRepe2 = juego.strPoints(mano2).indexOf("2");
 				//console.log( mano1[posiRepe1][0] + " / " + mano2[posiRepe2][0] );
 				if (mano1[posiRepe1][0] > mano2[posiRepe2][0]) {
 					//comparo el valor de la carta repetida
@@ -358,26 +359,56 @@ function Partida(numJugadores){
 					var pareja1 = mano1.splice(posiRepe1, 2);
 					var pareja2 = mano2.splice(posiRepe2, 2);
 					//console.log(mano1 + " ///// " + mano2);
-					ganador = this.desempate(mano1, mano2); 
+					ganador = this.desempate(mano1, mano2);
 				}
 				break;
-			case 2: //Two Pairs (Dobles Parejas)
+			case 2: //Two Pairs (Dobles Parejas) 
+				if (CARD_VALUES.code.indexOf(mano1[3][0]) > CARD_VALUES.code.indexOf(mano2[3][0]) ) {
+					ganador = 1;
+				} else if (CARD_VALUES.code.indexOf(mano1[3][0]) < CARD_VALUES.code.indexOf(mano2[3][0]) ) {
+					ganador = 2;
+				} else if (CARD_VALUES.code.indexOf(mano1[1][0]) > CARD_VALUES.code.indexOf(mano2[1][0]) ) {
+					ganador = 1;
+				} else if (CARD_VALUES.code.indexOf(mano1[1][0]) < CARD_VALUES.code.indexOf(mano2[1][0]) ) {
+					ganador = 2;
+				} else {
+					// posiRepe1 = juego.strPoints(mano1).indexOf("1"); //en cadena (212) devuelve posicion: 0,1,2 (1)
+					// posiRepe2 = juego.strPoints(mano2).indexOf("1");
+					// console.log(juego.strPoints(mano1)+"·"+posiRepe1+"·"+CARD_VALUES.code.indexOf(mano1[posiRepe1][0])+"<>"+posiRepe2+"·"+CARD_VALUES.code.indexOf(mano2[posiRepe2][0]));
+					// if (CARD_VALUES.code.indexOf(mano1[posiRepe1][0]) > CARD_VALUES.code.indexOf(mano2[posiRepe2][0])) {//comparo el valor de la carta repetida
+					// 	ganador = 1;
+					// } else if (CARD_VALUES.code.indexOf(mano1[posiRepe1][0]) < CARD_VALUES.code.indexOf(mano2[posiRepe2][0])) {
+					// 	ganador = 2;
+					// } else {
+						ganador = 0;
+					// }
+				}
 				break;
 			case 3: //Three of a Kind (Trio)
-				break;
-			case 4: //Straight (Escalera)
-				ganador = this.desempate(mano1, mano2); 
-				break;
-			case 5: //Flush (Color)
-				ganador = this.desempate(mano1, mano2); 
-				break;
 			case 6: //Full House (Full)
+				posiRepe1 = juego.strPoints(mano1).indexOf("3"); //en cadena (131) devuelve posicion repetida: 0,1,2 (1)
+				posiRepe2 = juego.strPoints(mano2).indexOf("3");
+				if (mano1[posiRepe1][0] > mano2[posiRepe2][0]) {
+					//comparo el valor de la carta repetida
+					ganador = 1;
+				} else if (mano1[posiRepe1][0] < mano2[posiRepe2][0]) {
+					ganador = 2;
+				}
 				break;
-			case 7: //Four of a Kind (Poker) 
+			case 7: //Four of a Kind (Poker)
+				posiRepe1 = juego.strPoints(mano1).indexOf("4"); //en cadena (14) devuelve posicion repetida: 0,1 (1)
+				posiRepe2 = juego.strPoints(mano2).indexOf("4");
+				if (mano1[posiRepe1][0] > mano2[posiRepe2][0]) {
+					ganador = 1;
+				} else if (mano1[posiRepe1][0] < mano2[posiRepe2][0]) {
+					ganador = 2;
+				}
 				break;
-			case 8: // Straight flush (Escalera de Color)
-				ganador = this.desempate(mano1, mano2); 
-				break;
+			// case 4: //Straight (Escalera)
+			// case 5: //Flush (Color)
+			// case 8: //Straight flush (Escalera de Color)
+			// 	ganador = this.desempate(mano1, mano2);
+			// 	break;
 			default:
 				break;
 		}
@@ -403,7 +434,6 @@ function Partida(numJugadores){
 		}
 		return ganador;
 	}
-
 }
 
 let juego = new PokerGame();
@@ -413,18 +443,30 @@ let baraja = new Baraja();
 let game = new Partida(2);
 
 //pruebas de jugadas Pareja iguales
-//jugadas iguales. poco probable
 //console.log(game.compara2Manos(["3D","7S","8C","AS","AC"],["3S","7C","8D","AD","AH"])); 
 //console.log(game.compara2Manos(["3D","7S","8C","AS","AC"],["4S","7C","8D","AD","AH"])); 
-//jugada Escalera iguales
+
+//pruebas de jugadas Two Pairs (Dobles Parejas)
+console.log(game.compara2Manos(["3D","7S","7C","AS","AC"],["3S","6C","6D","KD","KH"])); 
+console.log(game.compara2Manos(["3D","3S","8C","AS","AC"],["2S","4C","4D","AD","AH"])); 
+console.log(game.compara2Manos(["3D","3S","JC","AD","AS"],["3H","3C","8S","AC","AH"])); 
+console.log(game.compara2Manos(["3D","3S","8C","AD","AS"],["3H","3C","8S","AC","AH"])); 
+
+//jugada trio iguales
+// console.log(game.compara2Manos(["3C","4C","4D","4S","8C"],["3S","3H","3C","6S","8S"])); 
+// console.log(game.compara2Manos(["3C","4C","5C","5S","5D"],["KS","KH","2C","KS","AS"])); 
+//jugada full iguales
+// console.log(game.compara2Manos(["8C","4C","4D","4S","8C"],["3S","3H","3C","AS","AC"])); 
+// console.log(game.compara2Manos(["KH","KC","5C","5S","5D"],["KS","KD","AC","KS","AS"])); 
+// jugada Escalera iguales
 //console.log(game.compara2Manos(["3C","4D","5D","6D","7C"],["3S","4C","5S","6H","7S"])); 
 //console.log(game.compara2Manos(["8D","9D","TD","JD","QH"],["9S","TS","JS","QH","KS"])); 
 //console.log(game.compara2Manos(["TD","JD","QS","KH","AD"],["AS","2S","3H","4S","5S"])); 
-//jugada color iguales
-console.log(game.compara2Manos(["3C","4C","5C","6C","8C"],["3S","4S","5S","6S","8S"])); 
-console.log(game.compara2Manos(["3C","4C","5C","6C","AC"],["2S","4S","5S","6S","AS"])); 
-console.log(game.compara2Manos(["3C","4C","5C","6C","8C"],["2S","3S","5S","6S","8S"])); 
-//jugada esc.color iguales
+// jugada color iguales
+//console.log(game.compara2Manos(["3C","4C","5C","6C","8C"],["3S","4S","5S","6S","8S"])); 
+//console.log(game.compara2Manos(["3C","4C","5C","6C","AC"],["2S","4S","5S","6S","AS"])); 
+//console.log(game.compara2Manos(["3C","4C","5C","6C","8C"],["2S","3S","5S","6S","8S"])); 
+// jugada esc.color iguales
 //console.log(game.compara2Manos(["3D","4D","5D","6D","7D"],["3S","4S","5S","6S","7S"])); 
 //console.log(game.compara2Manos(["TD","JD","QD","KD","AD"],["AS","2S","3S","4S","5S"])); 
 //console.log(game.compara2Manos(["TD","JD","QS","KD","AD"],["AS","2S","3S","4S","5S"])); 
@@ -454,8 +496,8 @@ for (let i=0;i<5;i++) {
 // console.log(juego.isColor(["2D", "5D", "4D", "6D", "3C"]));
 // console.log(juego.isColor(["2D", "5D", "4D", "6A", "3C"]));
 
-console.log(juego.isStraight(["7D", "5D", "9D", "6D", "8D"]));
-console.log(juego.isStraight(["5D", "6D", "7D", "8D", "9D"]));
+//console.log(juego.isStraight(["7D", "5D", "9D", "6D", "8D"]));
+//console.log(juego.isStraight(["5D", "6D", "7D", "8D", "9D"]));
 // console.log(juego.isStraight(["AD", "TD", "KD", "QD", "JD"]));
 // console.log(juego.isStraight(["AD", "5D", "4D", "3D", "2D"]));
 
