@@ -40,6 +40,7 @@ function FooBarQuix(paramNumber) {
 	}
 }
 
+//Pruebas
 console.log(FooBarQuix("10"));
 console.log(FooBarQuix("ABD"));
 console.log(FooBarQuix(true));
